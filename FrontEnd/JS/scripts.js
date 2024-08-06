@@ -1,5 +1,7 @@
 
 
+    const login = document.getElementById("login")
+    const logout = document.getElementById("logout")
 
 
 
@@ -114,4 +116,53 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
         console.log("Aucun travail récupéré");
     }
+});
+
+
+
+   //Partie ou l'utilisateur et conecté
+   document.addEventListener("DOMContentLoaded", () => {
+    
+    const categoriesMenu = document.getElementById("categories-menu");
+    const logBtn = document.getElementById("logBtn");
+  
+    if (token) {
+        // Masquer le menu des catégories
+        if (categoriesMenu) {
+            categoriesMenu.style.display = "none";
+        }
+  
+        // Changer le bouton de login en logout
+        if (logBtn) {
+            logBtn.textContent = "logout";
+            logBtn.href = "#";
+            logBtn.addEventListener("click", () => {
+                sessionStorage.removeItem("token");
+                window.location.replace("index.html");
+            });
+        }
+      
+      // Ajouter une barre en tête de page avec "Mode édition"
+    const body = document.querySelector("body");
+    const topMenu = document.createElement("div");
+    topMenu.className = "topMenu";
+
+    const editMode = document.createElement("p");
+    editMode.innerHTML = `<i class="fas fa-pen-to-square"></i> Mode édition`;
+
+    topMenu.append(editMode);
+    body.insertAdjacentElement("afterbegin", topMenu);
+  
+      // Créer et insérer le bouton d'édition uniquement si l'utilisateur est connecté
+    const editBtn = `<p class="editBtn"><i class="fa-regular fa-pen-to-square"></i>Modifier</p>`;
+    const portfolioHeader = document.querySelector("#portfolio h2");
+
+    if (portfolioHeader) {
+      portfolioHeader.insertAdjacentHTML("afterend", editBtn);
+
+    // Ajouter un événement clic au bouton d'édition
+    document.querySelector(".editBtn").addEventListener("click", openModal);
+} 
+  }
+      
 });
