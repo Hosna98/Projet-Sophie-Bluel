@@ -226,10 +226,16 @@ async function displayModalGallery() {
  
 
   
-  // Fonction pour supprimer un travail
-  async function deleteWork(workID) {
+ // Fonction pour supprimer un travail
+async function deleteWork(workID) {
     try {
-        const response = await fetch(`http://localhost:5678/api/works/${workID}`, deleteRequest);
+        const response = await fetch(`http://localhost:5678/api/works/${workID}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+            }
+        });
+
         if (!response.ok) {
             console.log("Erreur lors de la suppression du travail");
             return;
@@ -239,18 +245,7 @@ async function displayModalGallery() {
     } catch (error) {
         console.error("Erreur lors de la suppression du travail:", error);
     }
-  }
-  
-  // Fonction pour ajouter des écouteurs d'événements de suppression
-  function addDeleteEventListeners() {
-    const trashIcons = document.querySelectorAll(".fa-trash-can");
-    trashIcons.forEach(icon => {
-        icon.addEventListener("click", async () => {
-            const workID = icon.id;
-            await deleteWork(workID);
-        });
-    });
-  }
+}
   
   
   // Fonction pour afficher la galerie de la modale avec la fonctionnalité de suppression
@@ -277,8 +272,20 @@ async function displayModalGallery() {
       }
     }
  
+// Fonction pour ajouter les écouteurs d'événements aux icônes de suppression
+function addDeleteEventListeners() {
+    const trashIcons = document.querySelectorAll("#modalGallery .fa-trash-can");
+    trashIcons.forEach(icon => {
+        icon.addEventListener("click", async (event) => {
+            const workID = event.target.id;
+            // Appeler la fonction de suppression sans confirmation
+            await deleteWork(workID);
+        });
+    });
+}
 
 
+  
 
    //display add work form
    const openNewWorkForm = function (e) {
@@ -375,3 +382,119 @@ function openModal2() {
     // Remplir le sélecteur de catégories lorsque la modale est ouverte
     displayCategoryModal();
 }
+
+
+
+  //prévisualisation d'une image avant son ajout dans un formulaire
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    const uploadButton = document.querySelector('.btn-ajout-fichier');
+    const imageInput = document.getElementById('imageInput');
+    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+    const photoContainer = document.getElementById('photoContainer');
+    const photoForm = document.getElementById('photoForm');
+    const submitButton = document.getElementById('submitButton');
+
+    // Ajout de la logique de prévisualisation de l'image
+    uploadButton.addEventListener('click', function() {
+        imageInput.click();
+    });
+
+    imageInput.addEventListener('change', function(event) {
+        imagePreviewContainer.innerHTML = '';
+        const elementsToHide = photoContainer.querySelectorAll('i, .btn-ajout-fichier, .file-format');
+        elementsToHide.forEach(element => {
+            element.style.display = 'none';
+        });
+
+        if (event.target.files && event.target.files[0]) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.alt = 'Prévisualisation de l\'image';
+                imagePreviewContainer.appendChild(img);
+            };
+
+            reader.readAsDataURL(file);
+        }
+    });
+
+
+    // Fonction pour valider le formulaire et afficher les résultats dans la console
+    function validateForm() {
+        let isValid = true;
+
+        // Vérifier la présence de l'image
+        if (imagePreviewContainer.childElementCount === 0) {
+            console.log('Erreur : Aucune image n\'a été ajoutée.');
+            isValid = false;
+        } else {
+            console.log('Image ajoutée avec succès.');
+        }
+
+        // Vérifier la présence du titre
+        const titleInput = document.getElementById('titre').value.trim();
+        if (titleInput === '') {
+            console.log('Erreur : Veuillez saisir un titre.');
+            isValid = false;
+        } else {
+            console.log('Titre saisi :', titleInput);
+        }
+
+        // Vérifier la sélection de la catégorie
+        const categorySelect = document.getElementById('category');
+        if (categorySelect.value === '') {
+            console.log('Erreur : Veuillez choisir une catégorie.');
+            isValid = false;
+        } else {
+            console.log('Catégorie choisie :', categorySelect.value);
+        }
+
+        return isValid;
+    }
+
+    // Ajouter un écouteur d'événement pour la soumission du formulaire
+    photoForm.addEventListener('submit', function(event) {
+        if (!validateForm()) {
+            event.preventDefault(); // Empêcher la soumission du formulaire si la validation échoue
+        }
+    });
+});
+
+  
+  // Fonction pour soumettre le formulaire
+  async function submitForm(event) {
+    event.preventDefault(); // Empêche la soumission par défaut du formulaire
+   
+ console.log(token);
+    const formData = new FormData();
+    formData.append('image', document.getElementById('imageInput').files[0]);
+    formData.append('title', document.getElementById('titre').value.trim());
+    formData.append('category', document.getElementById('category').value);
+
+    try {
+        const response = await fetch('http://localhost:5678/api/works', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erreur lors de l'ajout : ${response.status}`);
+        }
+
+        alert('Photo ajoutée avec succès.');
+        document.getElementById('modal2').style.display = 'none'; // Cacher la modale après l'ajout
+        loadGalleryImages(); // Rafraîchir la galerie
+    } catch (error) {
+        console.error('Erreur lors de l\'ajout de la photo :', error);
+    }
+}
+
+// Événement pour la soumission du formulaire
+photoForm.addEventListener('submit', submitForm);

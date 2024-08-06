@@ -580,3 +580,23 @@ nav li img {
 	background: #A7A7A7;
 
 }
+
+
+
+/* Conteneur pour la prévisualisation des images */
+#imagePreviewContainer {
+    width: 100%; /* Occuper toute la largeur disponible */
+    height: 190px; /* Définir la hauteur fixe du conteneur */
+    display: flex;
+    align-items: flex-start; /* Aligner l'image au haut du conteneur */
+    justify-content: center; /* Centrer l'image horizontalement */
+    overflow: hidden; /* Masquer tout dépassement de l'image */
+    background-color: #e8f1f6; /* Couleur de fond pour le conteneur (facultatif) */
+}
+
+/* Styles appliqués aux images dans le conteneur */
+#imagePreviewContainer img {
+    width: auto; /* Ajuster la largeur automatiquement pour conserver les proportions */
+    height: 100%; /* Faire en sorte que l'image occupe toute la hauteur du conteneur */
+    object-fit: contain; /* Assurer que l'image est contenue dans le conteneur sans déformation */
+}
