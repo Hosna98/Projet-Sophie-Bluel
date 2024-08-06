@@ -12,7 +12,6 @@ async function getWorks() {
             return [];
         }
         const responseJson = await response.json();
-        console.log(responseJson); // Vérifiez la structure des données ici
         return responseJson;
     } catch (error) {
         console.error("Erreur lors de la récupération des travaux:", error);
@@ -48,4 +47,71 @@ function displayWorks(works) {
 document.addEventListener('DOMContentLoaded', async () => {
     const works = await getWorks();
     displayWorks(works);
+});
+
+
+
+
+
+
+
+// Fonction pour récupérer les catégories depuis l'API
+async function getCategories() {
+    try {
+        const response = await fetch("http://localhost:5678/api/categories");
+        if (!response.ok) {
+            console.log("Erreur dans la récupération des catégories");
+            return [];
+        }
+        const responseJson = await response.json();
+        return responseJson;
+    } catch (error) {
+        console.error("Erreur lors de la récupération des catégories:", error);
+        return [];
+    }
+}
+
+// Fonction pour afficher les boutons de catégories
+async function displayButtons(works) {
+    const categories = await getCategories();
+    const filtres = document.getElementById("categories-menu"); // Sélectionner l'élément du menu dans votre HTML
+
+    if (!filtres) {
+        console.error("Menu des catégories non trouvé");
+        return;
+    }
+
+    // Créer un bouton "Tous"
+    const allBtn = document.createElement("button");
+    allBtn.id = "all";
+    allBtn.textContent = "Tous";
+    allBtn.addEventListener('click', () => {
+        console.log(works); // Afficher les travaux dans la console
+        displayWorks(works);
+    });
+    filtres.appendChild(allBtn);
+
+    // Créer des boutons pour chaque catégorie
+    categories.forEach(category => {
+        const btn = document.createElement("button");
+        btn.textContent = category.name;
+        btn.id = category.id;
+        btn.addEventListener('click', () => {
+            const filteredWorks = works.filter(work => work.categoryId === category.id);
+            console.log(filteredWorks); // Afficher les travaux filtrés dans la console
+            displayWorks(filteredWorks);
+        });
+        filtres.appendChild(btn);
+    });
+}
+
+// Appeler la fonction pour afficher les boutons après le chargement du DOM
+document.addEventListener('DOMContentLoaded', async () => {
+    const works = await getWorks();
+    if (works.length > 0) { // Vérifier que des travaux ont bien été récupérés
+        displayButtons(works);
+        displayWorks(works); // Afficher tous les travaux par défaut
+    } else {
+        console.log("Aucun travail récupéré");
+    }
 });

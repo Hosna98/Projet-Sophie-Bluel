@@ -125,6 +125,39 @@ li:hover {
 	text-align: center;
 	margin-bottom: 1em;
 }
+
+/* les boutons de catégories */
+
+#categories-menu {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 50px;
+  }
+  #categories-menu button {
+	background-color: transparent;
+	border: 2px solid #1D6154;
+	color: #1D6154;
+	border-radius: 20px;
+	padding: 10px 20px;
+	margin: 0 10px;
+	cursor: pointer;
+	font-family: 'Syne';
+	font-weight: 700;
+  }
+
+  #categories-menu button.active,
+#categories-menu button:hover {
+	background-color: #1D6154;
+	color: white;
+  }
+
+
+
+
+
+
+
+
 .gallery {
 	width: 100%;
 	display: grid;
