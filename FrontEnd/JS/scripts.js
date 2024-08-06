@@ -159,8 +159,70 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (portfolioHeader) {
       portfolioHeader.insertAdjacentHTML("afterend", editBtn);
 
-    
+     // Ajouter un événement clic au bouton d'édition
+     document.querySelector(".editBtn").addEventListener("click", openModal);
 } 
   }
       
 });
+
+// Sélection des éléments de la modale
+const modal = document.querySelector(".modal");
+const closeModalIcon = document.querySelector(".modalHeader .fa-xmark");
+const gallery = document.querySelector("#modalGallery");
+
+// Fonction pour ouvrir la modale
+const openModal = function () {
+   // Vérifie si l'utilisateur est connecté en vérifiant le token
+   if (sessionStorage.getItem("token")) { 
+    // Vérifie si l'élément modal existe 
+     if (modal) {
+       console.log("Ouverture de la modale"); // Message dans la console
+       modal.style.display = "flex"; // Affiche la modale
+     }
+   }
+ };
+
+
+
+ // Ajouter un événement clic à l'icône de fermeture
+if (closeModalIcon && modal) {// Vérifie si les éléments de l'icône de fermeture et de la modale existent
+    closeModalIcon.addEventListener("click", () => {// Ajouter un événement clic à l'icône de fermeture
+      modal.style.display = "none"; // Cache la modale
+      console.log("Fermeture de la modale"); 
+    });
+  
+  };
+ 
+  // Ajouter un événement clic pour fermer la modale en cliquant en dehors du contenu
+ if (modal) {
+    modal.addEventListener("click", (e) => {
+      if (e.target ==  modal) {
+        modal.style.display = "none"; // Cache la modale
+      }
+    });
+  };
+ 
+  // Fonction pour afficher les photos dans la galerie de la modale
+async function displayModalGallery() {
+    if (modalGallery) {
+      modalGallery.innerHTML = ""; // Vider la galerie actuelle dans la modale
+      const works = await getWorks(); // Récupérer les travaux depuis l'API
+      works.forEach(photos => {
+        const figure = document.createElement("figure");
+        const img = document.createElement("img");
+        const span = document.createElement("span");
+        const trash = document.createElement("i");
+        trash.classList.add("fa-solid", "fa-trash-can"); // Ajout correct des classes
+        trash.id = photos.id;
+        img.src = photos.imageUrl; // Correction de img.scr à img.src
+        span.appendChild(trash);
+        figure.appendChild(span);
+        figure.appendChild(img);
+        modalGallery.appendChild(figure); // Correction de works.appendChild(figure) à modalGallery.appendChild(figure)
+      });
+    }
+  }displayModalGallery()
+ 
+ 
+ 
