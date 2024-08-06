@@ -118,11 +118,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-
-
+    const token = sessionStorage.getItem("token");
    //Partie ou l'utilisateur et conecté
    document.addEventListener("DOMContentLoaded", () => {
-    
+   
     const categoriesMenu = document.getElementById("categories-menu");
     const logBtn = document.getElementById("logBtn");
   
@@ -160,8 +159,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (portfolioHeader) {
       portfolioHeader.insertAdjacentHTML("afterend", editBtn);
 
-    // Ajouter un événement clic au bouton d'édition
-    document.querySelector(".editBtn").addEventListener("click", openModal);
+    
 } 
   }
       
