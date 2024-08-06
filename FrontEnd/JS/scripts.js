@@ -277,3 +277,101 @@ async function displayModalGallery() {
       }
     }
  
+
+
+
+   //display add work form
+   const openNewWorkForm = function (e) {
+    if(e.target === document.querySelector("#addPictureBtn")){
+      modalStep = 1;
+      document.querySelector("#addPicture").style.display = "flex";
+      document.querySelector("#editGallery").style.display = "none";
+      document.querySelector("#labelPhoto").style.display = "flex";
+      document.querySelector("#picturePreview").style.display = "none";
+      
+      document.getElementById("addPictureForm").reset();
+      //<select> categories list 
+      selectCategoryForm();
+      //display preview
+      pictureInput = document.querySelector("#photo");
+      pictureInput.onchange = picturePreview;
+      //events
+      document.querySelector("#addPictureForm").onchange = changeSubmitBtnColor;
+      document.addEventListener("click", closeModal);
+      document.querySelector(".modalHeader .fa-arrow-left").addEventListener("click", openModal);
+      document.removeEventListener("click", openNewWorkForm);
+      document.removeEventListener("click", deleteBtn);
+      document.addEventListener("click", newWorkFormSubmit);
+    }
+  }
+  
+  // Sélection des éléments de la modale 2
+  const addPictureBtn = document.querySelector("#addPictureBtn"); // Bouton pour ouvrir la modale 2
+  const modal1 = document.querySelector("#editGallery"); // Modale 1
+  const modal2 = document.querySelector("#modal2"); // Modale 2
+  const backButton = document.querySelector(".js-modal-back"); // Bouton pour revenir à la modale 1
+  const closeButtons = document.querySelectorAll(".js-modal-close"); // Boutons pour fermer les modales
+ 
+  
+  // Fonction pour ouvrir la modale 2
+  function openModal2() {
+      modal1.style.display = "none"; // Cacher la modale 1
+      modal2.style.display = "flex"; // Afficher la modale 2
+  }
+  
+  // Fonction pour fermer la modale 2 et revenir à la modale 1
+  function closeModal() {
+      modal1.style.display = "flex"; // Afficher la modale 1
+      modal2.style.display = "none"; // Cacher la modale 2
+  }
+  
+  // Ajouter les écouteurs d'événements pour ouvrir la modale 2
+  if (addPictureBtn) {
+      addPictureBtn.addEventListener("click", openModal2);
+  }
+  
+  // Ajouter les écouteurs d'événements pour revenir à la modale 1
+  if (backButton) {
+      backButton.addEventListener("click", closeModal);
+  }
+  
+  // Ajouter les écouteurs d'événements pour fermer la modale depuis les boutons de fermeture
+  if (closeButtons) {
+      closeButtons.forEach(button => {
+          button.addEventListener("click", closeModal);
+      });
+  }
+
+  // Fonction qui génère les catégories dynamiquement pour la modale
+  async function displayCategoryModal() {
+    const select = document.querySelector("#modal2 select[name='category']"); // Assurez-vous que le sélecteur cible le bon élément
+    const categories = await getCategories();
+
+    if (select && categories) {
+        select.innerHTML = ''; // Vider les options existantes
+
+        // Créer une option par défaut
+        const defaultOption = document.createElement('option');
+        defaultOption.textContent = 'Choisissez une catégorie';
+        defaultOption.value = '';
+        select.appendChild(defaultOption);
+
+        // Ajouter les options des catégories
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category.id; // ID de la catégorie
+            option.textContent = category.name; // Nom de la catégorie
+            select.appendChild(option);
+        });
+    } else {
+        console.error('Erreur : impossible de remplir le sélecteur de catégories');
+    }
+}
+// Fonction pour ouvrir la modale d'ajout de photo
+function openModal2() {
+    modal1.style.display = "none"; // Cacher la modale 1
+    modal2.style.display = "flex"; // Afficher la modale 2
+    
+    // Remplir le sélecteur de catégories lorsque la modale est ouverte
+    displayCategoryModal();
+}

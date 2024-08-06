@@ -22,6 +22,35 @@
 			</div>
 			<button id="addPictureBtn">Ajouter une photo</button>
 		</div>
+		<div class="modalWrapper" id="modal2" style="display:none;">
+			<div class="modalHeader2">
+				<button class="js-modal-back"><i class="fa-solid fa-arrow-left"></i></button>
+				<button class="js-modal-close"><i class="fa-solid fa-xmark"></i></button>
+			</div>
+			<h3 id="titlemodal">Ajout photo</h3>
+			<form class="js-modal-stop" id="photoForm" enctype="multipart/form-data" method="post" name="fileInfo">
+				<div class="photo-container" id="photoContainer">
+					<i class="fa-regular fa-image"></i>
+					<button class="btn-ajout-fichier">
+						+ Ajouter photo
+						<input type="file" accept="image/jpeg, image/png" id="imageInput" name="image">
+					</button>
+					<span class="file-format">jpeg, png: 4mo max</span>
+					<div id="imagePreviewContainer"></div>
+				</div>
+				<div class="ajout">
+					<label for="titre" class="ajout-nom">Titre</label>
+					<input type="text" name="titre" id="titre" class="ajout-nom">
+				</div>
+					<div class="ajout ajout-categorie">
+						<label for="category" class="ajout-nom">Catégorie</label>
+						<select name="category" id="category" class="selection-category" required>
+							<!-- Les options seront ajoutées dynamiquement via JavaScript -->
+						</select>
+					</div>
+					<input type="submit" value="Valider" class="valider-photo" id="submitButton">
+			</form>
+		</div>
 	</aside>
 <header>
 	<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
