@@ -224,5 +224,56 @@ async function displayModalGallery() {
     }
   }displayModalGallery()
  
- 
+
+  
+  // Fonction pour supprimer un travail
+  async function deleteWork(workID) {
+    try {
+        const response = await fetch(`http://localhost:5678/api/works/${workID}`, deleteRequest);
+        if (!response.ok) {
+            console.log("Erreur lors de la suppression du travail");
+            return;
+        }
+        // Mise à jour de la galerie modale après suppression
+        displayModalGallery();
+    } catch (error) {
+        console.error("Erreur lors de la suppression du travail:", error);
+    }
+  }
+  
+  // Fonction pour ajouter des écouteurs d'événements de suppression
+  function addDeleteEventListeners() {
+    const trashIcons = document.querySelectorAll(".fa-trash-can");
+    trashIcons.forEach(icon => {
+        icon.addEventListener("click", async () => {
+            const workID = icon.id;
+            await deleteWork(workID);
+        });
+    });
+  }
+  
+  
+  // Fonction pour afficher la galerie de la modale avec la fonctionnalité de suppression
+  async function displayModalGallery() {
+      const modalGallery = document.getElementById("modalGallery");
+      if (modalGallery) {
+          modalGallery.innerHTML = ""; // Vider la galerie actuelle
+          const works = await getWorks(); // Récupérer les travaux depuis l'API
+          works.forEach(work => {
+              const figure = document.createElement("figure");
+              const img = document.createElement("img");
+              const span = document.createElement("span");
+              const trash = document.createElement("i");
+              trash.classList.add("fa-solid", "fa-trash-can");
+              trash.id = work.id;
+              img.src = work.imageUrl;
+              img.alt = work.title;
+              span.appendChild(trash);
+              figure.appendChild(img);
+              figure.appendChild(span);
+              modalGallery.appendChild(figure);
+          });
+          addDeleteEventListeners(); // Ajouter les écouteurs d'événements après avoir ajouté les éléments
+      }
+    }
  
