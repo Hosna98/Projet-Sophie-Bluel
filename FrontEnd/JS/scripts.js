@@ -241,7 +241,12 @@ async function deleteWork(workID) {
             return;
         }
         // Mise à jour de la galerie modale après suppression
+        /*
         displayModalGallery();
+        */
+       // Mise à jour de la galerie principale et modale après suppression
+       await displayWorks(await getWorks()); // Mettre à jour la galerie principale
+       await displayModalGallery(); // Réinitialiser la galerie modale
     } catch (error) {
         console.error("Erreur lors de la suppression du travail:", error);
     }
@@ -284,8 +289,6 @@ function addDeleteEventListeners() {
     });
 }
 
-
-  
 
    //display add work form
    const openNewWorkForm = function (e) {
@@ -422,6 +425,7 @@ function openModal2() {
         }
     });
 
+  
 
     // Fonction pour valider le formulaire et afficher les résultats dans la console
     function validateForm() {
@@ -461,20 +465,26 @@ function openModal2() {
         if (!validateForm()) {
             event.preventDefault(); // Empêcher la soumission du formulaire si la validation échoue
         }
+
+
+    
     });
 });
 
-  
-  // Fonction pour soumettre le formulaire
-  async function submitForm(event) {
+
+ 
+// Fonction pour soumettre le formulaire
+async function submitForm(event) {
     event.preventDefault(); // Empêche la soumission par défaut du formulaire
    
- console.log(token);
+  
     const formData = new FormData();
     formData.append('image', document.getElementById('imageInput').files[0]);
     formData.append('title', document.getElementById('titre').value.trim());
     formData.append('category', document.getElementById('category').value);
-
+  
+    const token = sessionStorage.getItem("token");
+    console.log(token);
     try {
         const response = await fetch('http://localhost:5678/api/works', {
             method: 'POST',
@@ -483,18 +493,26 @@ function openModal2() {
                 'Authorization': `Bearer ${token}`
             }
         });
-
+  
         if (!response.ok) {
             throw new Error(`Erreur lors de l'ajout : ${response.status}`);
         }
-
-        alert('Photo ajoutée avec succès.');
+  
+        
         document.getElementById('modal2').style.display = 'none'; // Cacher la modale après l'ajout
-        loadGalleryImages(); // Rafraîchir la galerie
+        document.querySelector('.modal').style.background = 'none'; // Supprimer le fond de la modale
+
+        //Rafraîchir la page après la soumission du formulaire
+        window.location.reload(); // Rafraîchir la page
+  
+       
     } catch (error) {
         console.error('Erreur lors de l\'ajout de la photo :', error);
     }
-}
+  }
+  
+  // Événement pour la soumission du formulaire
+  photoForm.addEventListener('submit', submitForm);
+  
 
-// Événement pour la soumission du formulaire
-photoForm.addEventListener('submit', submitForm);
+  

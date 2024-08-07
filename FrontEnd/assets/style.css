@@ -475,6 +475,7 @@ nav li img {
 	border: none;
     cursor: pointer;
 	
+	
 
 }
 
@@ -600,3 +601,5 @@ nav li img {
     height: 100%; /* Faire en sorte que l'image occupe toute la hauteur du conteneur */
     object-fit: contain; /* Assurer que l'image est contenue dans le conteneur sans déformation */
 }
+
+
